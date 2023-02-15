@@ -1,0 +1,3 @@
+# /usr/sbin/conntrack -F
+/sbin/iptables -t nat -D POSTROUTING -o enp5s0f1 -j MASQUERADE
+/sbin/rmmod ipt_MASQUERADE iptable_nat

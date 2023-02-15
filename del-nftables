@@ -1,0 +1,3 @@
+/sbin/nft delete chain nat postrouting
+/sbin/nft delete table nat
+/sbin/rmmod nft_chain_nat_ipv4 nft_masq_ipv4 nf_nat_ipv4 nf_nat

@@ -1,0 +1,16 @@
+if [ $1 -lt 20 -o $1 -gt 30 ]
+  then echo "Bad input"; exit -1;
+fi
+conntracksize=$((2**$1))
+hashsize=$((conntracksize/$2))
+echo "Info: Number of conntrack table entries: $conntracksize, hashsize: $hashsize."
+/sbin/nft add table nat
+/sbin/nft 'add chain nat postrouting { type nat hook postrouting priority 100 ; }'
+/sbin/nft add rule ip nat postrouting oifname "enp5s0f1" masquerade
+echo "$hashsize" > /sys/module/nf_conntrack/parameters/hashsize
+/sbin/sysctl -w net.netfilter.nf_conntrack_max=$conntracksize
+if [ -n "$3" ]
+  then
+  echo "Info: Setting UDP timeout to: $3"
+  /sbin/sysctl -w net.netfilter.nf_conntrack_udp_timeout=$3
+fi
